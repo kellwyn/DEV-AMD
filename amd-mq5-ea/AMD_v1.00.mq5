@@ -172,7 +172,9 @@ bool ParsePeriods(string periods)
     int cnt = StringSplit(periods, ',', parts);
     for(int i = 0; i < cnt; i++)
     {
-        string p = StringTrimLeft(StringTrimRight(parts[i]));
+        StringTrimLeft(parts[i]);
+        StringTrimRight(parts[i]);
+        string p = parts[i];
         int idx = (int)StringToInteger(p);
         if(idx >= 0 && idx < 48)
             g_periodAllowed[idx] = true;
@@ -241,7 +243,6 @@ void DrawZone(string name, datetime t1, double price1,
     ObjectCreate(0, name, OBJ_RECTANGLE, 0, t1, price1, t2, price2);
     ObjectSetInteger(0, name, OBJPROP_COLOR,        clr);
     ObjectSetInteger(0, name, OBJPROP_FILL,         true);
-    ObjectSetInteger(0, name, OBJPROP_TRANSPARENCY, alpha);
     ObjectSetInteger(0, name, OBJPROP_BACK,         true);
     ObjectSetInteger(0, name, OBJPROP_SELECTABLE,   false);
 }
