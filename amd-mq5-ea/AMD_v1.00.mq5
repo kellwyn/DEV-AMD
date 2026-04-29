@@ -375,6 +375,44 @@ void ValidateLevels(double entry, double &sl, double &tp, bool isShort)
 }
 
 
+//── News event vertical lines ────────────────────────────────────────────────
+// Draws a double white vertical line at each CPI release time.
+// Called once from OnInit so lines persist for the life of the chart session.
+// Non-CPI events (NFP/FOMC/GDP/PPI) are NOT in the calendar and will not appear.
+
+void DrawNewsLines()
+{
+    if(!InpDrawObjects) return;
+    int barSecs = PeriodSeconds();   // gap between the two lines = 1 bar width
+
+    for(int i = 0; i < ArraySize(CPI_DATES); i++)
+    {
+        datetime t = CPI_DATES[i];
+        string   n1 = StringFormat("AMD_News_%d_a", (int)t);
+        string   n2 = StringFormat("AMD_News_%d_b", (int)t);
+
+        if(ObjectFind(0, n1) < 0)
+        {
+            ObjectCreate(0, n1, OBJ_VLINE, 0, t, 0);
+            ObjectSetInteger(0, n1, OBJPROP_COLOR,     clrWhite);
+            ObjectSetInteger(0, n1, OBJPROP_WIDTH,     1);
+            ObjectSetInteger(0, n1, OBJPROP_STYLE,     STYLE_SOLID);
+            ObjectSetInteger(0, n1, OBJPROP_BACK,      false);
+            ObjectSetInteger(0, n1, OBJPROP_SELECTABLE, false);
+        }
+        if(ObjectFind(0, n2) < 0)
+        {
+            ObjectCreate(0, n2, OBJ_VLINE, 0, t + barSecs, 0);
+            ObjectSetInteger(0, n2, OBJPROP_COLOR,     clrWhite);
+            ObjectSetInteger(0, n2, OBJPROP_WIDTH,     1);
+            ObjectSetInteger(0, n2, OBJPROP_STYLE,     STYLE_SOLID);
+            ObjectSetInteger(0, n2, OBJPROP_BACK,      false);
+            ObjectSetInteger(0, n2, OBJPROP_SELECTABLE, false);
+        }
+    }
+}
+
+
 //── Chart drawing helpers ────────────────────────────────────────────────────
 
 void DeleteObjects(string prefix)
@@ -886,6 +924,8 @@ int OnInit()
     if(InpUsePipTP)
         PrintFormat("  Manual TP dist  : %.1f pips = %.5f price units  (%.5f needed)",
                     InpTPPips, InpTPPips * g_pipSize, minStopPt);
+
+    DrawNewsLines();
 
     bool cpiToday = IsCPIDay();
     Print("  CPI today        : ", cpiToday ? "YES — auto-enabled" : "no");

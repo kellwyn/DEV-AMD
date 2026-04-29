@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "octagon-mcp-server": {
+      "command": "bash",
+      "args": [
+        "-c",
+        "set -a; source /c/Users/kellw/OneDrive/DEV-AMD/.env; npx -y octagon-mcp@latest"
+      ]
+    }
+  }
+}
