@@ -918,8 +918,8 @@ void OnTick()
 }
 
 void OnTradeTransaction(const MqlTradeTransaction &trans,
-                        const MqlTradeResult      &result,
-                        const MqlTradeRequest     &request)
+                        const MqlTradeRequest     &request,
+                        const MqlTradeResult      &result)
 {
     if(trans.type != TRADE_TRANSACTION_DEAL_ADD) return;
     ulong deal = trans.deal;
